@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nombre_finca: MyString
+  localizacion: MyString
+  owner: MyString
+  informacion: MyString
+
+two:
+  nombre_finca: MyString
+  localizacion: MyString
+  owner: MyString
+  informacion: MyString

@@ -1,0 +1,15 @@
+<%= form_for @finca do |f| %>
+	<p>Nombre:<%= f.text_field :nombre_finca%></p>
+	<p>Localizacion:<%= f.text_field :localizacion %></p>
+	<p>Clima:<%= f.text_field :clima %></p>
+	<p>Capacidad:<%= f.text_field :capacidad %></p>
+	<p>Informacion:<%= f.text_field :informacion %></p>
+	<p>Latitud:<%= f.text_field :lat %></p>
+	<p>Longitud:<%= f.text_field :lon %></p>
+	<p>Rating:<%= f.text_field :rating %></p>
+	<p>Precio:<%= f.text_field :precio %></p>
+	<p>IdOwner:<%= f.text_field :idowner %></p>
+	<p>Owner:<%= f.text_field :owner %></p>
+
+	<%= f.submit 'Send' %> 
+<%end%>
