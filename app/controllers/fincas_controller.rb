@@ -12,7 +12,7 @@ class FincasController < ApplicationController
 			@exposejson.push(@jsonfincas)
 		end
 
-		render :json => @exposejson
+		 render :json => @exposejson
 
 	end
 
