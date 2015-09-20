@@ -10,6 +10,11 @@
 	<p>Precio:<%= f.text_field :precio %></p>
 	<p>IdOwner:<%= f.text_field :idowner %></p>
 	<p>Owner:<%= f.text_field :owner %></p>
+	<br>
+
+	<%= f.fields_for :images do |builder| %>
+		<p>Image url:<%= builder.text_field :url %></p>
+	<% end %>
 
 	<%= f.submit 'Send' %> 
 <%end%>

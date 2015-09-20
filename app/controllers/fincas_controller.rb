@@ -7,7 +7,7 @@ class FincasController < ApplicationController
 				'localizacion' => x.localizacion,'clima' => x.clima,
 				'capacidad' => x.capacidad,'informacion' => x.informacion,
 				'lat' => x.lat,'lon' => x.lon, 'rating' => x.rating, 'precio' => x.precio,
-				'idowner' => x.idowner,'owner' => x.owner}
+				'idowner' => x.idowner,'owner' => x.owner,'imagen' => x.images}
 				
 			@exposejson.push(@jsonfincas)
 		end
@@ -19,6 +19,7 @@ class FincasController < ApplicationController
 
 	def new
 		@finca = Finca.new
+		4.times{@finca.images.build}
 	end
 
 	def create
@@ -33,13 +34,23 @@ class FincasController < ApplicationController
 	end
 
 	def edit
+		@finca = Finca.find(params[:id])
+	end
+
+	def update
+		@finca = Finca.find(params[:id])
+
+		if @finca.update_attributes(allowed_params)
+			redirect_to fincas_path
+		else
+			render "new"
+		end
 	end
 
 	def show
 	end
 
-	def update
-	end
+
 
 	def destroy
 	end
@@ -48,7 +59,7 @@ class FincasController < ApplicationController
 
 	def allowed_params
 		params.require(:finca).permit(:nombre_finca, :localizacion, :clima, :capacidad,
-			:informacion, :lat, :lon, :rating, :precio, :idowner, :owner);
+			:informacion, :lat, :lon, :rating, :precio, :idowner, :owner, images_attributes: [:id, :url, :_destroy]);
 	end 
 
 
