@@ -1,14 +1,18 @@
 class FincasController < ApplicationController
 	def index
 		@finca = Finca.all
+		@arrayimg = []
 		@exposejson = []
-		@finca.each do |x|
+		@finca.each do |x,index|
+			x.images.each do |w|
+				@arrayimg.push(w.url)
+			end
 			@jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
 				'localizacion' => x.localizacion,'clima' => x.clima,
 				'capacidad' => x.capacidad,'informacion' => x.informacion,
 				'lat' => x.lat,'lon' => x.lon, 'rating' => x.rating, 'precio' => x.precio,
-				'idowner' => x.idowner,'owner' => x.owner,'imagen' => x.images}
-				
+				'idowner' => x.idowner,'owner' => x.owner,'imagen' => @arrayimg}
+			
 			@exposejson.push(@jsonfincas)
 		end
 
