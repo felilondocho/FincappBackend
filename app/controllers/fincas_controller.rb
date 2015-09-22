@@ -3,9 +3,11 @@ class FincasController < ApplicationController
 		@finca = Finca.all
 		@arrayimg = []
 		@exposejson = []
-		@finca.each do |x,index|
+		@finca.each do |x|
 			x.images.each do |w|
-				@arrayimg.push(w.url)
+				#if(w.finca_id == x.id)
+					@arrayimg.push(w.url)
+				#end
 			end
 			@jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
 				'localizacion' => x.localizacion,'clima' => x.clima,
@@ -15,6 +17,7 @@ class FincasController < ApplicationController
 			
 			@exposejson.push(@jsonfincas)
 		end
+
 
 		 render :json => @exposejson
 
