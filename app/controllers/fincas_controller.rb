@@ -4,11 +4,11 @@ class FincasController < ApplicationController
 		@arrayimg = []
 		@exposejson = []
 		@finca.each do |x|
+			@arrayimg =[]
 			x.images.each do |w|
-				#if(w.finca_id == x.id)
 					@arrayimg.push(w.url)
-				#end
 			end
+
 			@jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
 				'localizacion' => x.localizacion,'clima' => x.clima,
 				'capacidad' => x.capacidad,'informacion' => x.informacion,
