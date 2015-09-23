@@ -1,19 +1,19 @@
 <%= form_for @finca do |f| %>
-	<p>Nombre:<%= f.text_field :nombre_finca%></p>
-	<p>Localizacion:<%= f.text_field :localizacion %></p>
-	<p>Clima:<%= f.text_field :clima %></p>
-	<p>Capacidad:<%= f.text_field :capacidad %></p>
-	<p>Informacion:<%= f.text_field :informacion %></p>
-	<p>Latitud:<%= f.text_field :lat %></p>
-	<p>Longitud:<%= f.text_field :lon %></p>
-	<p>Rating:<%= f.text_field :rating %></p>
-	<p>Precio:<%= f.text_field :precio %></p>
-	<p>IdOwner:<%= f.text_field :idowner %></p>
-	<p>Owner:<%= f.text_field :owner %></p>
+	<p>Nombre:<%= f.text_field :nombre_finca, :required => true%></p>
+	<p>Localizacion:<%= f.text_field :localizacion, :required => true %></p>
+	<p>Clima:<%= f.text_field :clima, :required => true %></p>
+	<p>Capacidad:<%= f.text_field :capacidad, :required => true %></p>
+	<p>Informacion:<%= f.text_field :informacion, :required => true %></p>
+	<p>Latitud:<%= f.text_field :lat, :required => true %></p>
+	<p>Longitud:<%= f.text_field :lon, :required => true %></p>
+	<p>Rating:<%= f.text_field :rating, :required => true %></p>
+	<p>Precio:<%= f.text_field :precio, :required => true %></p>
+	<p>IdOwner:<%= f.text_field :idowner, :required => true %></p>
+	<p>Owner:<%= f.text_field :owner, :required => true %></p>
 	<br>
 
 	<%= f.fields_for :images do |builder| %>
-		<p>Image url:<%= builder.text_field :url %></p>
+		<p>Image url:<%= builder.text_field :url, :required => true %></p>
 	<% end %>
 
 	<%= f.submit 'Send' %> 
