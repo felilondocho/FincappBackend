@@ -39,13 +39,48 @@ class FincasController < ApplicationController
 
 	end
 
-	def filterclima
-		@clima = params[:clima]
-		@fincaconclima = Finca.where(clima: @clima)
+	def filter
+		#filter/:clima/:localizacion/:precio/:personas
+		@query = ""
+		flag = false
+		if params[:clima] != "no"
+			@clima = params[:clima]
+			@query += "clima = '" + @clima + "'"
+			flag = true
+		end
+		if params[:localizacion] != "no"
+			@localizacion = params[:localizacion]
+			if flag == true
+				@query += " AND localizacion = '"+@localizacion+"'"
+			else
+				@query += "localizacion = '" + @localizacion+"'"
+			end
+			flag = true
+		end
+		if params[:precio] != "no"
+			@precio = params[:precio]
+			if flag == true
+				@query += " AND precio = '"+@precio+"'"
+			else
+				@query += "precio = '" + @precio+"'"
+			end
+			flag = true
+		end
+		if params[:personas] != "no"
+			@personas = params[:personas]
+			if flag == true
+				@query += " AND capacidad = '"+@personas+"'"
+			else
+				@query += "capacidad = '" + @personas+"'"
+			end
+		end
+
+
+		@fincafiltrada = Finca.where(@query)
 
 		@arrayimg = []
 		@exposejson = []
-		@fincaconclima.each do |x|
+		@fincafiltrada.each do |x|
 			@arrayimg =[]
 			x.images.each do |w|
 					@arrayimg.push(w.url)
@@ -63,31 +98,6 @@ class FincasController < ApplicationController
 
 		 render :json => @exposejson
 
-	end
-
-	def filterlocalizacion
-		@localizacion = params[:localizacion]
-		@fincaconlocalizacion = Finca.where(localizacion: @localizacion)
-
-		@arrayimg = []
-		@exposejson = []
-		@fincaconlocalizacion.each do |x|
-			@arrayimg =[]
-			x.images.each do |w|
-				@arrayimg.push(w.url)
-			end
-
-			@ratingfinca = sacarrating(x.id)
-			@jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
-				'localizacion' => x.localizacion,'clima' => x.clima,
-				'capacidad' => x.capacidad,'informacion' => x.informacion,
-				'lat' => x.lat,'lon' => x.lon, 'rating' => @ratingfinca, 'precio' => x.precio,
-				'idowner' => x.idowner,'owner' => x.owner,'imagen' => @arrayimg}
-			
-			@exposejson.push(@jsonfincas)
-		end
-
-		 render :json => @exposejson
 	end
 
 	def edit

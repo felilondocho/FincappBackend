@@ -7,9 +7,10 @@ Rails.application.routes.draw do
   root 'fincas#index'
   resources :fincas do
     collection do
-      get 'filterclima/:clima' => 'fincas#filterclima'
-      get 'filterlocalizacion/:localizacion' => 'fincas#filterlocalizacion'
+      #get 'filterclima/:clima' => 'fincas#filterclima'
+      #get 'filterlocalizacion/:localizacion' => 'fincas#filterlocalizacion'
       get ':id/rating' => 'fincas#rating'
+      get 'filter/:clima/:localizacion/:precio/:personas' => 'fincas#filter'
     end
   end
 
