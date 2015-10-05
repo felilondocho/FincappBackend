@@ -9,11 +9,17 @@ Rails.application.routes.draw do
     collection do
       #get 'filterclima/:clima' => 'fincas#filterclima'
       #get 'filterlocalizacion/:localizacion' => 'fincas#filterlocalizacion'
-      get ':id/rating' => 'fincas#rating'
       get 'filter/:clima/:localizacion/:precio/:personas' => 'fincas#filter'
     end
   end
 
+  resources :rating do
+    collection do
+      get 'addrating/:id/:rating' => 'rating#addrating'
+      get 'curl_example' => 'rating#curl_example'
+      post 'curl_example_post' => 'rating#curl_example_post'
+    end
+  end
 
 
   # Example of regular route:

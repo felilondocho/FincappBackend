@@ -26,6 +26,7 @@ class FincasController < ApplicationController
 	def new
 		@finca = Finca.new
 		4.times{@finca.images.build}
+		@finca.build_rating
 	end
 
 	def create
@@ -120,20 +121,13 @@ class FincasController < ApplicationController
 		@totaldevotos = @finca.rating.votos1+@finca.rating.votos2+
 			@finca.rating.votos3+@finca.rating.votos4+@finca.rating.votos5
 		@result = 0.0
-		@result = (((1*@finca.rating.votos1)+(2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
+		if @totaldevotos > 0
+			@result = (((1*@finca.rating.votos1)+(2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
 			(4*@finca.rating.votos4)+(5*@finca.rating.votos5))/@totaldevotos)
+		else
+			@result = 0
+		end
 		return @result
-	end
-
-	def rating
-		@idfinca = params[:id]
-		@finca = Finca.find(@idfinca)
-		@totaldevotos = @finca.rating.votos1+@finca.rating.votos2+
-			@finca.rating.votos3+@finca.rating.votos4+@finca.rating.votos5
-		@result = 0.0
-		@result = (((1*@finca.rating.votos1)+(2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
-			(4*@finca.rating.votos4)+(5*@finca.rating.votos5))/@totaldevotos)
-		puts @result
 	end
 
 	def show
@@ -148,7 +142,8 @@ class FincasController < ApplicationController
 
 	def allowed_params
 		params.require(:finca).permit(:nombre_finca, :localizacion, :clima, :capacidad,
-			:informacion, :lat, :lon, :rating, :precio, :idowner, :owner, images_attributes: [:id, :url, :_destroy]);
+			:informacion, :lat, :lon, :rating, :precio, :idowner, :owner, images_attributes: [:id, :url, :_destroy],
+			rating_attributes:[:id,:votos1,:votos2,:votos3,:votos4,:votos5]);
 	end 
 
 

@@ -3,7 +3,6 @@ class CreateRatings < ActiveRecord::Migration
     create_table :ratings do |t|
 
     	t.integer :finca_id
-    	t.integer :ratingtotal
 		t.integer :votos1
 		t.integer :votos2
 		t.integer :votos3

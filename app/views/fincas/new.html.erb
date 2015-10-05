@@ -6,7 +6,6 @@
 	<p>Informacion:<%= f.text_field :informacion, :required => true %></p>
 	<p>Latitud:<%= f.text_field :lat, :required => true %></p>
 	<p>Longitud:<%= f.text_field :lon, :required => true %></p>
-	<p>Rating:<%= f.text_field :rating, :required => true %></p>
 	<p>Precio:<%= f.text_field :precio, :required => true %></p>
 	<p>IdOwner:<%= f.text_field :idowner, :required => true %></p>
 	<p>Owner:<%= f.text_field :owner, :required => true %></p>
@@ -15,6 +14,14 @@
 	<%= f.fields_for :images do |builder| %>
 		<p>Image url:<%= builder.text_field :url, :required => true %></p>
 	<% end %>
+
+	<%= f.fields_for :rating do |builder| %>
+		<%= builder.text_field :votos1,  :value=>"0"%>
+		<%= builder.text_field :votos2,  :value=>"0"%>
+		<%= builder.text_field :votos3,  :value=>"0"%>
+		<%= builder.text_field :votos4,  :value=>"0"%>
+		<%= builder.text_field :votos5,  :value=>"0"%>
+	<%end%>
 
 	<%= f.submit 'Send' %> 
 <%end%>

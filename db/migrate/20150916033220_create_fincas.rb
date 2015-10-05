@@ -8,7 +8,6 @@ class CreateFincas < ActiveRecord::Migration
       t.string :informacion
       t.float :lat
       t.float :lon
-      t.float :rating
       t.integer :precio
       t.integer :idowner
       t.string :owner
