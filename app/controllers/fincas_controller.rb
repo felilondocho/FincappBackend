@@ -1,6 +1,6 @@
 class FincasController < ApplicationController
 	def index
-		@finca = Finca.all
+		@finca = Finca.all.order("id")
 		@arrayimg = []
 		@exposejson = []
 		@finca.each do |x|
