@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     collection do
       #get 'filterclima/:clima' => 'fincas#filterclima'
       #get 'filterlocalizacion/:localizacion' => 'fincas#filterlocalizacion'
+      get 'getAtt' => 'fincas#getAtt'
       get 'filter/:clima/:localizacion/:precio/:personas' => 'fincas#filter'
     end
   end

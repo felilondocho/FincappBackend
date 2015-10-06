@@ -133,7 +133,40 @@ class FincasController < ApplicationController
 	def show
 	end
 
+	def getAtt
+		@exposejson = []
+		@climas =[]
+		@localizaciones = []
+		@precios = []
+		@capacidades = []
 
+		@fincaclimas = Finca.select(:clima).distinct
+		@fincaclimas.each do |x|
+			@climas += [x.clima]
+		end
+		@exposejson += ["clima" => @climas]
+
+		@fincalocalizacion = Finca.select(:localizacion).distinct
+		@fincalocalizacion.each do |x|
+			@localizaciones += [x.localizacion]
+		end
+		@exposejson += ["localizacion" => @localizaciones]
+
+		@fincaprecio = Finca.select(:precio).distinct
+		@fincaprecio.each do |x|
+			@precios += [x.precio]
+		end
+		@exposejson += ["precio" => @precios]
+
+		@fincacapacidad = Finca.select(:capacidad).distinct
+		@fincacapacidad.each do |x|
+			@capacidades += [x.capacidad]
+		end
+		@exposejson += ["capacidad" => @capacidades]
+
+		render :json => @exposejson
+
+	end
 
 	def destroy
 	end
