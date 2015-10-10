@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150925202347) do
+ActiveRecord::Schema.define(version: 20151008150043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "alquilers", force: :cascade do |t|
+    t.integer  "finca_id"
+    t.string   "datetime"
+    t.string   "estado"
+    t.integer  "user_id"
+    t.boolean  "calificacion"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
 
   create_table "fincas", force: :cascade do |t|
     t.string   "nombre_finca"
@@ -24,7 +34,6 @@ ActiveRecord::Schema.define(version: 20150925202347) do
     t.string   "informacion"
     t.float    "lat"
     t.float    "lon"
-    t.float    "rating"
     t.integer  "precio"
     t.integer  "idowner"
     t.string   "owner"
@@ -41,14 +50,25 @@ ActiveRecord::Schema.define(version: 20150925202347) do
 
   create_table "ratings", force: :cascade do |t|
     t.integer  "finca_id"
-    t.integer  "ratingtotal"
     t.integer  "votos1"
     t.integer  "votos2"
     t.integer  "votos3"
     t.integer  "votos4"
     t.integer  "votos5"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.integer  "finca_id"
+    t.string   "nombre"
+    t.integer  "cedula"
+    t.string   "email"
+    t.integer  "telefono"
+    t.integer  "celular"
+    t.string   "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

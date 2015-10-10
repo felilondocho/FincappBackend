@@ -168,6 +168,123 @@ class FincasController < ApplicationController
 
 	end
 
+	def getAttClima
+		@exposejson = []
+		@localizaciones = []
+		@precios = []
+		@capacidades = []
+		@pay = JSON.parse(request.body.read)
+		@clima = @pay["clima"]
+		@query = "clima='"+@clima+"'"
+		@fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
+		@fincalocalizacion.each do |x|
+			@localizaciones += [x.localizacion]
+		end
+		@exposejson += ["localizacion" => @localizaciones]
+
+		@fincaprecio = Finca.select(:precio).where(@query).distinct
+		@fincaprecio.each do |x|
+			@precios += [x.precio]
+		end
+		@exposejson += ["precio" => @precios]
+
+		@fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+		@fincacapacidad.each do |x|
+			@capacidades += [x.capacidad]
+		end
+		@exposejson += ["capacidad" => @capacidades]
+
+		render :json => @exposejson
+	end
+
+	def getAttLoc
+		@exposejson = []
+		@climas = []
+		@precios = []
+		@capacidades = []
+		@pay = JSON.parse(request.body.read)
+		@loc = @pay["localizacion"]
+		@query = "localizacion='"+@loc+"'"
+		@fincalocalizacion = Finca.select(:clima).where(@query).distinct
+		@fincalocalizacion.each do |x|
+			@climas += [x.clima]
+		end
+		@exposejson += ["clima" => @climas]
+
+		@fincaprecio = Finca.select(:precio).where(@query).distinct
+		@fincaprecio.each do |x|
+			@precios += [x.precio]
+		end
+		@exposejson += ["precio" => @precios]
+
+		@fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+		@fincacapacidad.each do |x|
+			@capacidades += [x.capacidad]
+		end
+		@exposejson += ["capacidad" => @capacidades]
+
+		render :json => @exposejson
+	end
+
+	def getAttPrec
+		@exposejson = []
+		@climas = []
+		@localizaciones = []
+		@capacidades = []
+		@pay = JSON.parse(request.body.read)
+		@precio = @pay["precio"].to_s
+		@query = "precio='"+@precio+"'"
+
+		@fincaclima = Finca.select(:clima).where(@query).distinct
+		@fincaclima.each do |x|
+			@climas += [x.clima]
+		end
+		@exposejson += ["clima" => @climas]
+
+		@fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
+		@fincalocalizacion.each do |x|
+			@localizaciones += [x.localizacion]
+		end
+		@exposejson += ["localizacion" => @localizaciones]
+
+		@fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+		@fincacapacidad.each do |x|
+			@capacidades += [x.capacidad]
+		end
+		@exposejson += ["capacidad" => @capacidades]
+
+		render :json => @exposejson
+	end
+
+	def getAttCap
+		@exposejson = []
+		@climas = []
+		@localizaciones = []
+		@precios = []
+		@pay = JSON.parse(request.body.read)
+		@capacidad = @pay["capacidad"].to_s
+		@query = "capacidad='"+@capacidad+"'"
+		@fincaclima = Finca.select(:clima).where(@query).distinct
+		@fincaclima.each do |x|
+			@climas += [x.clima]
+		end
+		@exposejson += ["clima" => @climas]
+
+		@fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
+		@fincalocalizacion.each do |x|
+			@localizaciones += [x.localizacion]
+		end
+		@exposejson += ["localizacion" => @localizaciones]
+
+		@fincaprecio = Finca.select(:precio).where(@query).distinct
+		@fincaprecio.each do |x|
+			@precios += [x.precio]
+		end
+		@exposejson += ["precio" => @precios]
+
+		render :json => @exposejson
+	end
+
 	def destroy
 	end
 
