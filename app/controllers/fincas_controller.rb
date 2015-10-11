@@ -122,7 +122,8 @@ class FincasController < ApplicationController
             @finca.rating.votos3+@finca.rating.votos4+@finca.rating.votos5
         @result = 0.0
         if @totaldevotos > 0
-            @result = (((1*@finca.rating.votos1)+(2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
+            @result = (((1*@finca.rating.votos1)+
+                (2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
             (4*@finca.rating.votos4)+(5*@finca.rating.votos5))/@totaldevotos)
         else
             @result = 0
@@ -175,7 +176,12 @@ class FincasController < ApplicationController
         @capacidades = []
         @pay = JSON.parse(request.body.read)
         @clima = @pay["clima"]
-        @query = "clima='"+@clima+"'"
+        if(@clima != "no")
+            @query = "clima='"+@clima+"'"
+        else
+            @query = "clima!='@clima'"
+        end
+
         @fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
         @fincalocalizacion.each do |x|
             @localizaciones += [x.localizacion]
@@ -248,8 +254,10 @@ class FincasController < ApplicationController
     private
 
     def allowed_params
-        params.require(:finca).permit(:nombre_finca, :localizacion, :clima, :capacidad,
-            :informacion, :lat, :lon, :rating, :precio, :idowner, :owner, images_attributes: [:id, :url, :_destroy],
+        params.require(:finca).permit(:nombre_finca, :localizacion,
+         :clima, :capacidad,
+            :informacion, :lat, :lon, :rating, :precio, :idowner, :owner,
+             images_attributes: [:id, :url, :_destroy],
             rating_attributes:[:id,:votos1,:votos2,:votos3,:votos4,:votos5]);
     end 
 
