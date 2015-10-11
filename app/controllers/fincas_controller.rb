@@ -210,7 +210,20 @@ class FincasController < ApplicationController
         @pay = JSON.parse(request.body.read)
         @cli = @pay["clima"]
         @loc = @pay["localizacion"]
-        @query = "clima='"+@cli+"' AND localizacion='"+@loc+"'"
+        if(@cli != "no" && @loc != "no")
+            @query = "clima='"+@cli+"' AND localizacion='"+@loc+"'"
+        else
+            if(@cli != "no" && @loc == "no")
+                @query = "clima='"+@cli+"' AND localizacion!='@localizacion'"
+            else
+                if(@cli == "no" && @loc != "no") 
+                    @query = "clima='@clima' AND localizacion='"+@loc+"'"
+                else
+                    @query = "clima='@clima' AND localizacion='@localizacion'"
+                end
+            end
+        end
+        
 
         @fincaprecio = Finca.select(:precio).where(@query).distinct
         @fincaprecio.each do |x|
