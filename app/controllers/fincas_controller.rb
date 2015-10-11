@@ -1,300 +1,257 @@
 class FincasController < ApplicationController
-	def index
-		@finca = Finca.all.order("id")
-		@arrayimg = []
-		@exposejson = []
-		@finca.each do |x|
-			@arrayimg =[]
-			x.images.each do |w|
-					@arrayimg.push(w.url)
-			end
-			@ratingfinca = sacarrating(x.id)
-			@jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
-				'localizacion' => x.localizacion,'clima' => x.clima,
-				'capacidad' => x.capacidad,'informacion' => x.informacion,
-				'lat' => x.lat,'lon' => x.lon, 'rating' => @ratingfinca, 'precio' => x.precio,
-				'idowner' => x.idowner,'owner' => x.owner,'imagen' => @arrayimg}
-			
-			@exposejson.push(@jsonfincas)
-		end
+    def index
+        @finca = Finca.all.order("id")
+        @arrayimg = []
+        @exposejson = []
+        @finca.each do |x|
+            @arrayimg =[]
+            x.images.each do |w|
+                    @arrayimg.push(w.url)
+            end
+            @ratingfinca = sacarrating(x.id)
+            @jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
+                'localizacion' => x.localizacion,'clima' => x.clima,
+                'capacidad' => x.capacidad,'informacion' => x.informacion,
+                'lat' => x.lat,'lon' => x.lon, 'rating' => @ratingfinca, 'precio' => x.precio,
+                'idowner' => x.idowner,'owner' => x.owner,'imagen' => @arrayimg}
+            
+            @exposejson.push(@jsonfincas)
+        end
 
-		 render :json => @exposejson
+         render :json => @exposejson
 
-	end
-
-
-	def new
-		@finca = Finca.new
-		4.times{@finca.images.build}
-		@finca.build_rating
-	end
-
-	def create
-		@finca = Finca.new(allowed_params)
-
-		if @finca.save()
-			redirect_to fincas_path
-		else
-			render "new"
-		end
-
-	end
-
-	def filter
-		#filter/:clima/:localizacion/:precio/:personas
-		@query = ""
-		flag = false
-		if params[:clima] != "no"
-			@clima = params[:clima]
-			@query += "clima = '" + @clima + "'"
-			flag = true
-		end
-		if params[:localizacion] != "no"
-			@localizacion = params[:localizacion]
-			if flag == true
-				@query += " AND localizacion = '"+@localizacion+"'"
-			else
-				@query += "localizacion = '" + @localizacion+"'"
-			end
-			flag = true
-		end
-		if params[:precio] != "no"
-			@precio = params[:precio]
-			if flag == true
-				@query += " AND precio = '"+@precio+"'"
-			else
-				@query += "precio = '" + @precio+"'"
-			end
-			flag = true
-		end
-		if params[:personas] != "no"
-			@personas = params[:personas]
-			if flag == true
-				@query += " AND capacidad = '"+@personas+"'"
-			else
-				@query += "capacidad = '" + @personas+"'"
-			end
-		end
+    end
 
 
-		@fincafiltrada = Finca.where(@query)
+    def new
+        @finca = Finca.new
+        4.times{@finca.images.build}
+        @finca.build_rating
+    end
 
-		@arrayimg = []
-		@exposejson = []
-		@fincafiltrada.each do |x|
-			@arrayimg =[]
-			x.images.each do |w|
-					@arrayimg.push(w.url)
-			end
+    def create
+        @finca = Finca.new(allowed_params)
 
-			@ratingfinca = sacarrating(x.id)
-			@jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
-				'localizacion' => x.localizacion,'clima' => x.clima,
-				'capacidad' => x.capacidad,'informacion' => x.informacion,
-				'lat' => x.lat,'lon' => x.lon, 'rating' => @ratingfinca, 'precio' => x.precio,
-				'idowner' => x.idowner,'owner' => x.owner,'imagen' => @arrayimg}
-			
-			@exposejson.push(@jsonfincas)
-		end
+        if @finca.save()
+            redirect_to fincas_path
+        else
+            render "new"
+        end
 
-		 render :json => @exposejson
+    end
 
-	end
+    def filter
+        #filter/:clima/:localizacion/:precio/:personas
+        @query = ""
+        flag = false
+        if params[:clima] != "no"
+            @clima = params[:clima]
+            @query += "clima = '" + @clima + "'"
+            flag = true
+        end
+        if params[:localizacion] != "no"
+            @localizacion = params[:localizacion]
+            if flag == true
+                @query += " AND localizacion = '"+@localizacion+"'"
+            else
+                @query += "localizacion = '" + @localizacion+"'"
+            end
+            flag = true
+        end
+        if params[:precio] != "no"
+            @precio = params[:precio]
+            if flag == true
+                @query += " AND precio = '"+@precio+"'"
+            else
+                @query += "precio = '" + @precio+"'"
+            end
+            flag = true
+        end
+        if params[:personas] != "no"
+            @personas = params[:personas]
+            if flag == true
+                @query += " AND capacidad = '"+@personas+"'"
+            else
+                @query += "capacidad = '" + @personas+"'"
+            end
+        end
 
-	def edit
-		@finca = Finca.find(params[:id])
-	end
 
-	def update
-		@finca = Finca.find(params[:id])
+        @fincafiltrada = Finca.where(@query)
 
-		if @finca.update_attributes(allowed_params)
-			redirect_to fincas_path
-		else
-			render "new"
-		end
-	end
+        @arrayimg = []
+        @exposejson = []
+        @fincafiltrada.each do |x|
+            @arrayimg =[]
+            x.images.each do |w|
+                    @arrayimg.push(w.url)
+            end
 
-	def sacarrating(idfinca)
-		@idfinca = idfinca
-		@finca = Finca.find(@idfinca)
-		@totaldevotos = @finca.rating.votos1+@finca.rating.votos2+
-			@finca.rating.votos3+@finca.rating.votos4+@finca.rating.votos5
-		@result = 0.0
-		if @totaldevotos > 0
-			@result = (((1*@finca.rating.votos1)+(2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
-			(4*@finca.rating.votos4)+(5*@finca.rating.votos5))/@totaldevotos)
-		else
-			@result = 0
-		end
-		return @result
-	end
+            @ratingfinca = sacarrating(x.id)
+            @jsonfincas = {'id' => x.id,'nombre_finca' => x.nombre_finca,
+                'localizacion' => x.localizacion,'clima' => x.clima,
+                'capacidad' => x.capacidad,'informacion' => x.informacion,
+                'lat' => x.lat,'lon' => x.lon, 'rating' => @ratingfinca, 'precio' => x.precio,
+                'idowner' => x.idowner,'owner' => x.owner,'imagen' => @arrayimg}
+            
+            @exposejson.push(@jsonfincas)
+        end
 
-	def show
-	end
+         render :json => @exposejson
 
-	def getAtt
-		@exposejson = []
-		@climas =[]
-		@localizaciones = []
-		@precios = []
-		@capacidades = []
+    end
 
-		@fincaclimas = Finca.select(:clima).distinct
-		@fincaclimas.each do |x|
-			@climas += [x.clima]
-		end
-		@exposejson += ["clima" => @climas]
+    def edit
+        @finca = Finca.find(params[:id])
+    end
 
-		@fincalocalizacion = Finca.select(:localizacion).distinct
-		@fincalocalizacion.each do |x|
-			@localizaciones += [x.localizacion]
-		end
-		@exposejson += ["localizacion" => @localizaciones]
+    def update
+        @finca = Finca.find(params[:id])
 
-		@fincaprecio = Finca.select(:precio).distinct
-		@fincaprecio.each do |x|
-			@precios += [x.precio]
-		end
-		@exposejson += ["precio" => @precios]
+        if @finca.update_attributes(allowed_params)
+            redirect_to fincas_path
+        else
+            render "new"
+        end
+    end
 
-		@fincacapacidad = Finca.select(:capacidad).distinct
-		@fincacapacidad.each do |x|
-			@capacidades += [x.capacidad]
-		end
-		@exposejson += ["capacidad" => @capacidades]
+    def sacarrating(idfinca)
+        @idfinca = idfinca
+        @finca = Finca.find(@idfinca)
+        @totaldevotos = @finca.rating.votos1+@finca.rating.votos2+
+            @finca.rating.votos3+@finca.rating.votos4+@finca.rating.votos5
+        @result = 0.0
+        if @totaldevotos > 0
+            @result = (((1*@finca.rating.votos1)+(2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
+            (4*@finca.rating.votos4)+(5*@finca.rating.votos5))/@totaldevotos)
+        else
+            @result = 0
+        end
+        return @result
+    end
 
-		render :json => @exposejson
+    def show
+    end
 
-	end
+    def getAtt
+        @exposejson = []
+        @climas =[]
+        @localizaciones = []
+        @precios = []
+        @capacidades = []
 
-	def getAttClima
-		@exposejson = []
-		@localizaciones = []
-		@precios = []
-		@capacidades = []
-		@pay = JSON.parse(request.body.read)
-		@clima = @pay["clima"]
-		@query = "clima='"+@clima+"'"
-		@fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
-		@fincalocalizacion.each do |x|
-			@localizaciones += [x.localizacion]
-		end
-		@exposejson += ["localizacion" => @localizaciones]
+        @fincaclimas = Finca.select(:clima).distinct
+        @fincaclimas.each do |x|
+            @climas += [x.clima]
+        end
+        @exposejson += ["clima" => @climas]
 
-		@fincaprecio = Finca.select(:precio).where(@query).distinct
-		@fincaprecio.each do |x|
-			@precios += [x.precio]
-		end
-		@exposejson += ["precio" => @precios]
+        @fincalocalizacion = Finca.select(:localizacion).distinct
+        @fincalocalizacion.each do |x|
+            @localizaciones += [x.localizacion]
+        end
+        @exposejson += ["localizacion" => @localizaciones]
 
-		@fincacapacidad = Finca.select(:capacidad).where(@query).distinct
-		@fincacapacidad.each do |x|
-			@capacidades += [x.capacidad]
-		end
-		@exposejson += ["capacidad" => @capacidades]
+        @fincaprecio = Finca.select(:precio).distinct
+        @fincaprecio.each do |x|
+            @precios += [x.precio]
+        end
+        @exposejson += ["precio" => @precios]
 
-		render :json => @exposejson
-	end
+        @fincacapacidad = Finca.select(:capacidad).distinct
+        @fincacapacidad.each do |x|
+            @capacidades += [x.capacidad]
+        end
+        @exposejson += ["capacidad" => @capacidades]
 
-	def getAttLoc
-		@exposejson = []
-		@climas = []
-		@precios = []
-		@capacidades = []
-		@pay = JSON.parse(request.body.read)
-		@loc = @pay["localizacion"]
-		@query = "localizacion='"+@loc+"'"
-		@fincalocalizacion = Finca.select(:clima).where(@query).distinct
-		@fincalocalizacion.each do |x|
-			@climas += [x.clima]
-		end
-		@exposejson += ["clima" => @climas]
+        render :json => @exposejson
 
-		@fincaprecio = Finca.select(:precio).where(@query).distinct
-		@fincaprecio.each do |x|
-			@precios += [x.precio]
-		end
-		@exposejson += ["precio" => @precios]
+    end
 
-		@fincacapacidad = Finca.select(:capacidad).where(@query).distinct
-		@fincacapacidad.each do |x|
-			@capacidades += [x.capacidad]
-		end
-		@exposejson += ["capacidad" => @capacidades]
+    def getAttClima
+        @exposejson = []
+        @localizaciones = []
+        @precios = []
+        @capacidades = []
+        @pay = JSON.parse(request.body.read)
+        @clima = @pay["clima"]
+        @query = "clima='"+@clima+"'"
+        @fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
+        @fincalocalizacion.each do |x|
+            @localizaciones += [x.localizacion]
+        end
+        @exposejson += ["localizacion" => @localizaciones]
 
-		render :json => @exposejson
-	end
+        @fincaprecio = Finca.select(:precio).where(@query).distinct
+        @fincaprecio.each do |x|
+            @precios += [x.precio]
+        end
+        @exposejson += ["precio" => @precios]
 
-	def getAttPrec
-		@exposejson = []
-		@climas = []
-		@localizaciones = []
-		@capacidades = []
-		@pay = JSON.parse(request.body.read)
-		@precio = @pay["precio"].to_s
-		@query = "precio='"+@precio+"'"
+        @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+        @fincacapacidad.each do |x|
+            @capacidades += [x.capacidad]
+        end
+        @exposejson += ["capacidad" => @capacidades]
 
-		@fincaclima = Finca.select(:clima).where(@query).distinct
-		@fincaclima.each do |x|
-			@climas += [x.clima]
-		end
-		@exposejson += ["clima" => @climas]
+        render :json => @exposejson
+    end
 
-		@fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
-		@fincalocalizacion.each do |x|
-			@localizaciones += [x.localizacion]
-		end
-		@exposejson += ["localizacion" => @localizaciones]
+    def getAttLoc
+        @exposejson = []
+        @precios = []
+        @capacidades = []
+        @pay = JSON.parse(request.body.read)
+        @cli = @pay["clima"]
+        @loc = @pay["localizacion"]
+        @query = "clima='"+@cli+"' AND localizacion='"+@loc+"'"
 
-		@fincacapacidad = Finca.select(:capacidad).where(@query).distinct
-		@fincacapacidad.each do |x|
-			@capacidades += [x.capacidad]
-		end
-		@exposejson += ["capacidad" => @capacidades]
+        @fincaprecio = Finca.select(:precio).where(@query).distinct
+        @fincaprecio.each do |x|
+            @precios += [x.precio]
+        end
+        @exposejson += ["precio" => @precios]
 
-		render :json => @exposejson
-	end
+        @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+        @fincacapacidad.each do |x|
+            @capacidades += [x.capacidad]
+        end
+        @exposejson += ["capacidad" => @capacidades]
 
-	def getAttCap
-		@exposejson = []
-		@climas = []
-		@localizaciones = []
-		@precios = []
-		@pay = JSON.parse(request.body.read)
-		@capacidad = @pay["capacidad"].to_s
-		@query = "capacidad='"+@capacidad+"'"
-		@fincaclima = Finca.select(:clima).where(@query).distinct
-		@fincaclima.each do |x|
-			@climas += [x.clima]
-		end
-		@exposejson += ["clima" => @climas]
+        render :json => @exposejson
+    end
 
-		@fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
-		@fincalocalizacion.each do |x|
-			@localizaciones += [x.localizacion]
-		end
-		@exposejson += ["localizacion" => @localizaciones]
+    def getAttPrec
+        @exposejson = []
+        @climas = []
+        @localizaciones = []
+        @capacidades = []
+        @pay = JSON.parse(request.body.read)
+        @cli = @pay["clima"]
+        @loc = @pay["localizacion"]
+        @precio = @pay["precio"].to_s
+        @query = "clima='"+@cli+"' AND localizacion='"+
+                @loc+"' AND precio='"+@precio+"'"
 
-		@fincaprecio = Finca.select(:precio).where(@query).distinct
-		@fincaprecio.each do |x|
-			@precios += [x.precio]
-		end
-		@exposejson += ["precio" => @precios]
+        @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+        @fincacapacidad.each do |x|
+            @capacidades += [x.capacidad]
+        end
+        @exposejson += ["capacidad" => @capacidades]
 
-		render :json => @exposejson
-	end
+        render :json => @exposejson
+    end
 
-	def destroy
-	end
+    def destroy
+    end
 
-	private
+    private
 
-	def allowed_params
-		params.require(:finca).permit(:nombre_finca, :localizacion, :clima, :capacidad,
-			:informacion, :lat, :lon, :rating, :precio, :idowner, :owner, images_attributes: [:id, :url, :_destroy],
-			rating_attributes:[:id,:votos1,:votos2,:votos3,:votos4,:votos5]);
-	end 
+    def allowed_params
+        params.require(:finca).permit(:nombre_finca, :localizacion, :clima, :capacidad,
+            :informacion, :lat, :lon, :rating, :precio, :idowner, :owner, images_attributes: [:id, :url, :_destroy],
+            rating_attributes:[:id,:votos1,:votos2,:votos3,:votos4,:votos5]);
+    end 
 
 
 end
