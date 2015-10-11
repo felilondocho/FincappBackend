@@ -249,8 +249,57 @@ class FincasController < ApplicationController
         @cli = @pay["clima"]
         @loc = @pay["localizacion"]
         @precio = @pay["precio"].to_s
+
+        @query = ""
+        flag = false
+        if @cli != "no"
+            @query += "clima = '" + @clima + "'"
+            flag = true
+        end
+        if @loc != "no"
+            if flag == true
+                @query += " AND localizacion = '"+@localizacion+"'"
+            else
+                @query += "localizacion = '" + @localizacion+"'"
+            end
+            flag = true
+        end
+        if @precio != "no"
+            if flag == true
+                @query += " AND precio = '"+@precio+"'"
+            else
+                @query += "precio = '" + @precio+"'"
+            end
+            flag = true
+        end
+=begin
+
+        if(@cli != "no" && @loc != "no" && @precio != "no")
+            @query = "clima='"+@cli+"' AND localizacion='"+
+                @loc+"' AND precio='"+@precio+"'"
+        else
+            if(@cli == "no" && @loc != "no" && @precio !="no")
+                @query = "clima='@cli' AND localizacion='"+
+                @loc+"' AND precio='@precio'"
+            else
+                if(@cli != "no" && @loc == "no" && @precio!="no") 
+                    @query = "clima='@cli' AND localizacion='"+
+                @loc+"' AND precio='"+@precio+"'"
+                else
+                    if(@cli != "no" && @loc == "no" && @precio!="no")
+                        @query = "clima='"+@cli+"' AND localizacion='"+
+                        @loc+"' AND precio='"+@precio+"'"
+                    else
+
+                    end
+                    @query = "clima='@clima' AND localizacion='@localizacion'"
+                end
+            end
+        end
+
         @query = "clima='"+@cli+"' AND localizacion='"+
                 @loc+"' AND precio='"+@precio+"'"
+=end
 
         @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
         @fincacapacidad.each do |x|
