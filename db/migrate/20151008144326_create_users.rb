@@ -2,6 +2,7 @@ class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
     	t.integer :finca_id
+      t.string :username
     	t.string :nombre
     	t.integer :cedula
     	t.string :email

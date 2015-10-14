@@ -24,6 +24,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users do
+    collection do
+      post 'newUser' => 'users#newUser'
+    end
+  end
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -22,7 +22,6 @@ class FincasController < ApplicationController
 
     end
 
-
     def new
         @finca = Finca.new
         4.times{@finca.images.build}
