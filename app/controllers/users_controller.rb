@@ -50,7 +50,5 @@ class UsersController < ApplicationController
             @jsonresponse = {'status' => "no"}
             render :json => @jsonresponse
         end
-            @jsonresponse = {'status' => "done"}
-            render :json => @jsonresponse
     end
 end
