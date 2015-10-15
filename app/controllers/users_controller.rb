@@ -40,7 +40,7 @@ class UsersController < ApplicationController
         @cellphone = @pay["cellphone"]
         @password = @pay["password"]
         @finca = User.new(:finca_id => 0,:nombre => @name,
-            :lastname => @lastname, :username => @name,
+            :apellidos => @lastname, :username => @name,
             :cedula => @cc,:email => @email,:telefono => @telephone,
             :celular => @cellphone,:password => @password)
         if @finca.save()
