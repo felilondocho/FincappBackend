@@ -7,7 +7,6 @@ class UsersController < ApplicationController
             @jsonfincas = {'username' => x.username}
             @exposejson.push(@jsonfincas)
         end
-
          render :json => @exposejson
 	end
 
@@ -22,11 +21,16 @@ class UsersController < ApplicationController
 	def edit
 	end
 
+    def userFav
+        @favs = User.where()
+    end
+
 	def update
 	end
 
     def newUser
         @pay = JSON.parse(request.body.read)
+        puts @pay
         @name = @pay["name"]
         @lastname = @pay["lastname"]
         @username = @pay["username"]
@@ -46,5 +50,7 @@ class UsersController < ApplicationController
             @jsonresponse = {'status' => "no"}
             render :json => @jsonresponse
         end
+            @jsonresponse = {'status' => "done"}
+            render :json => @jsonresponse
     end
 end

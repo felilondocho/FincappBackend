@@ -30,6 +30,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :favorites do
+    collection do      
+      get 'userFav/:idUser' => 'favorites#userFav'
+    end
+  end
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
