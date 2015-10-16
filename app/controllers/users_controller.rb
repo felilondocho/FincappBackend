@@ -21,9 +21,6 @@ class UsersController < ApplicationController
 	def edit
 	end
 
-    def userFav
-        @favs = User.where()
-    end
 
 	def update
 	end

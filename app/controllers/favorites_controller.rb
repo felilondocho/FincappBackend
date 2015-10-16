@@ -17,7 +17,7 @@ class FavoritesController < ApplicationController
 		@arrayimg = []
         @exposejson = []
 		@query = "user_id = '" + @userId + "'"
-		@favs = Favorite.where(@query)
+		@favs = Favorite.where("user_id = ?",@userId)
 		@favs.each do |result|
 			@fincaId = result.finca_id
 			@finca = Finca.find(@fincaId)
@@ -26,16 +26,32 @@ class FavoritesController < ApplicationController
             @finca.images.each do |w|
                     @arrayimg.push(w.url)
             end
-            #@ratingfinca = sacarrating(@finca.id)
+            @ratingfinca = sacarrating(@finca.id)
             @jsonfincas = {'id' => @finca.id,'nombre_finca' => @finca.nombre_finca,
                 'localizacion' => @finca.localizacion,'clima' => @finca.clima,
                 'capacidad' => @finca.capacidad,'informacion' => @finca.informacion,
-                'lat' => @finca.lat,'lon' => @finca.lon, 'precio' => @finca.precio,
-                'idowner' => @finca.idowner,'owner' => @finca.owner,'imagen' => @arrayimg}
+                'lat' => @finca.lat,'lon' => @finca.lon,'rating' => @ratingfinca,
+                'precio' => @finca.precio,'idowner' => @finca.idowner,
+                'owner' => @finca.owner,'imagen' => @arrayimg}
             
             @exposejson.push(@jsonfincas)
 		end
 		render :json => @exposejson
 	end
 
+	def sacarrating(idfinca)
+        @idfinca = idfinca
+        @finca = Finca.find(@idfinca)
+        @totaldevotos = @finca.rating.votos1+@finca.rating.votos2+
+            @finca.rating.votos3+@finca.rating.votos4+@finca.rating.votos5
+        @result = 0.0
+        if @totaldevotos > 0
+            @result = (((1*@finca.rating.votos1)+
+                (2*@finca.rating.votos2)+(3*@finca.rating.votos3)+
+            (4*@finca.rating.votos4)+(5*@finca.rating.votos5))/@totaldevotos)
+        else
+            @result = 0
+        end
+        return @result
+    end
 end

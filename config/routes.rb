@@ -27,12 +27,14 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       post 'newUser' => 'users#newUser'
+      post 'login' => 'user#login'
     end
   end
 
   resources :favorites do
     collection do      
       get 'userFav/:idUser' => 'favorites#userFav'
+      post 'addUserFav' => 'favorites#addUserFav'
     end
   end
 

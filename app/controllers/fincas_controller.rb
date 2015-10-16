@@ -41,42 +41,49 @@ class FincasController < ApplicationController
 
     def filter
         #filter/:clima/:localizacion/:precio/:personas
-        @query = ""
+        @queryArray=[]
         flag = false
         if params[:clima] != "no"
             @clima = params[:clima]
-            @query += "clima = '" + @clima + "'"
+            @queryArray.push("clima = ?")
+            @queryArray.push(@clima)
             flag = true
         end
         if params[:localizacion] != "no"
             @localizacion = params[:localizacion]
             if flag == true
-                @query += " AND localizacion = '"+@localizacion+"'"
+                @queryArray[0] += (" AND localizacion = ?")
+                @queryArray.push(@localizacion)
             else
-                @query += "localizacion = '" + @localizacion+"'"
+                @queryArray.push("localizacion = ?")
+                @queryArray.push(@localizacion)
             end
             flag = true
         end
         if params[:precio] != "no"
             @precio = params[:precio]
             if flag == true
-                @query += " AND precio = '"+@precio+"'"
+                @queryArray[0] += (" AND precio = ?")
+                @queryArray.push(@precio)            
             else
-                @query += "precio = '" + @precio+"'"
+                @queryArray.push("precio = ?")
+                @queryArray.push(@precio)
             end
             flag = true
         end
         if params[:personas] != "no"
-            @personas = params[:personas]
+            @capacidad = params[:personas]
             if flag == true
-                @query += " AND capacidad = '"+@personas+"'"
+                @queryArray[0] += (" AND capacidad = ?")
+                @queryArray.push(@capacidad)            
             else
-                @query += "capacidad = '" + @personas+"'"
+                @queryArray.push("capacidad = ?")
+                @queryArray.push(@capacidad)
             end
         end
 
 
-        @fincafiltrada = Finca.where(@query)
+        @fincafiltrada = Finca.where(@queryArray)
 
         @arrayimg = []
         @exposejson = []
@@ -175,30 +182,22 @@ class FincasController < ApplicationController
         @capacidades = []
         @pay = JSON.parse(request.body.read)
         @clima = @pay["clima"]
+        @flagClima = false
+        @queryArray=[]
         if(@clima != "no")
-            @query = "clima='"+@clima+"'"
+            @queryArray.push("clima = ?")
+            @queryArray.push(@clima)
+            @flagClima = true
         else
-            @query = "clima!='@clima'"
+            @queryArray.push("clima != ?")
+            @queryArray.push("@clima")
         end
 
-        @fincalocalizacion = Finca.select(:localizacion).where(@query).distinct
+        @fincalocalizacion = Finca.select(:localizacion).where(@queryArray).distinct
         @fincalocalizacion.each do |x|
             @localizaciones += [x.localizacion]
         end
         @exposejson += ["localizacion" => @localizaciones]
-
-        @fincaprecio = Finca.select(:precio).where(@query).distinct
-        @fincaprecio.each do |x|
-            @precios += [x.precio]
-        end
-        @exposejson += ["precio" => @precios]
-
-        @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
-        @fincacapacidad.each do |x|
-            @capacidades += [x.capacidad]
-        end
-        @exposejson += ["capacidad" => @capacidades]
-
         render :json => @exposejson
     end
 
@@ -209,33 +208,28 @@ class FincasController < ApplicationController
         @pay = JSON.parse(request.body.read)
         @cli = @pay["clima"]
         @loc = @pay["localizacion"]
-
-        @query = ""
+        @queryArray=[]
         flag = false
         if @cli != "no"
-            @query += "clima = '" + @cli + "'"
+            @queryArray.push("clima = ?")
+            @queryArray.push(@cli)
             flag = true
         end
         if @loc != "no"
             if flag == true
-                @query += " AND localizacion = '"+@loc+"'"
+                @queryArray[0] += (" AND localizacion = ?")
+                @queryArray.push(@loc)
             else
-                @query += "localizacion = '" + @loc+"'"
+                @queryArray.push("localizacion = ?")
+                @queryArray.push(@loc)
             end
-            flag = true
         end
         
-        @fincaprecio = Finca.select(:precio).where(@query).distinct
+        @fincaprecio = Finca.select(:precio).where(@queryArray).distinct
         @fincaprecio.each do |x|
             @precios += [x.precio]
         end
         @exposejson += ["precio" => @precios]
-
-        @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
-        @fincacapacidad.each do |x|
-            @capacidades += [x.capacidad]
-        end
-        @exposejson += ["capacidad" => @capacidades]
 
         render :json => @exposejson
     end
@@ -249,31 +243,35 @@ class FincasController < ApplicationController
         @cli = @pay["clima"]
         @loc = @pay["localizacion"]
         @precio = @pay["precio"].to_s
-
-        @query = ""
+        @queryArray=[]
         flag = false
         if @cli != "no"
-            @query += "clima = '" + @cli + "'"
+            @queryArray.push("clima = ?")
+            @queryArray.push(@cli)
             flag = true
         end
         if @loc != "no"
             if flag == true
-                @query += " AND localizacion = '"+@loc+"'"
+                @queryArray[0] += (" AND localizacion = ?")
+                @queryArray.push(@loc)
             else
-                @query += "localizacion = '" + @loc+"'"
+                @queryArray.push("localizacion = ?")
+                @queryArray.push(@loc)
             end
             flag = true
         end
         if @precio != "no"
             if flag == true
-                @query += " AND precio = '"+@precio+"'"
+                @queryArray[0] += (" AND precio = ?")
+                @queryArray.push(@precio)            
             else
-                @query += "precio = '" + @precio+"'"
+                @queryArray.push("precio = ?")
+                @queryArray.push(@precio)
             end
             flag = true
         end
 
-        @fincacapacidad = Finca.select(:capacidad).where(@query).distinct
+        @fincacapacidad = Finca.select(:capacidad).where(@queryArray).distinct
         @fincacapacidad.each do |x|
             @capacidades += [x.capacidad]
         end
