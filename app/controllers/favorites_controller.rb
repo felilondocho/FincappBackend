@@ -16,7 +16,6 @@ class FavoritesController < ApplicationController
 		@userId = params[:idUser]
 		@arrayimg = []
         @exposejson = []
-		@query = "user_id = '" + @userId + "'"
 		@favs = Favorite.where("user_id = ?",@userId)
 		@favs.each do |result|
 			@fincaId = result.finca_id
@@ -53,5 +52,20 @@ class FavoritesController < ApplicationController
             @result = 0
         end
         return @result
+    end
+
+    def addUserFav
+        @pay = JSON.parse(request.body.read)
+        @fincaId = @pay["id_finca"]
+        @userId = @pay["id_user"]
+        @fav = Favorite.new(:user_id => @userId,:finca_id => @fincaId)
+        if @fav.save()
+            @jsonresponse = {'status' => "done"}
+            render :json => @jsonresponse
+        else
+            @jsonresponse = {'status' => "no"}
+            render :json => @jsonresponse
+        end
+
     end
 end

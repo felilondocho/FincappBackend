@@ -27,7 +27,6 @@ class UsersController < ApplicationController
 
     def newUser
         @pay = JSON.parse(request.body.read)
-        puts @pay
         @name = @pay["name"]
         @lastname = @pay["lastname"]
         @username = @pay["username"]
@@ -36,11 +35,11 @@ class UsersController < ApplicationController
         @telephone = @pay["telephone"]
         @cellphone = @pay["cellphone"]
         @password = @pay["password"]
-        @finca = User.new(:finca_id => 0,:nombre => @name,
+        @user = User.new(:finca_id => 0,:nombre => @name,
             :apellidos => @lastname, :username => @name,
             :cedula => @cc,:email => @email,:telefono => @telephone,
             :celular => @cellphone,:password => @password)
-        if @finca.save()
+        if @user.save()
             @jsonresponse = {'status' => "done"}
             render :json => @jsonresponse
         else
