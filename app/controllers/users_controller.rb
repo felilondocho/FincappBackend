@@ -29,9 +29,9 @@ class UsersController < ApplicationController
         @pay = JSON.parse(request.body.read)
         @username = @pay["username"]
         @password = @pay["password"]
-        @user = User.where("username = ? AND password = ?",@username,@password)
+        @userexist = User.where("username = ? AND password = ?",@username,@password)
         @userfound = false
-        @user.each do |result|
+        @userexist.each do |result|
             @user_id = result.id
             @userfound = true
         end
@@ -54,13 +54,24 @@ class UsersController < ApplicationController
         @telephone = @pay["telephone"]
         @cellphone = @pay["cellphone"]
         @password = @pay["password"]
-        @user = User.new(:finca_id => 0,:nombre => @name,
-            :apellidos => @lastname, :username => @name,
-            :cedula => @cc,:email => @email,:telefono => @telephone,
-            :celular => @cellphone,:password => @password)
-        if @user.save()
-            @jsonresponse = {'status' => "done"}
-            render :json => @jsonresponse
+
+        @userexist = User.where("username = ? AND password = ?",@username,@password)
+        @userfound = false
+        @userexist.each do |result|
+            @userfound = true
+        end
+        if(@userfound)
+            @user = User.new(:finca_id => 0,:nombre => @name,
+                :apellidos => @lastname, :username => @name,
+                :cedula => @cc,:email => @email,:telefono => @telephone,
+                :celular => @cellphone,:password => @password)
+            if @user.save()
+                @jsonresponse = {'status' => "done"}
+                render :json => @jsonresponse
+            else
+                @jsonresponse = {'status' => "no"}
+                render :json => @jsonresponse
+            end
         else
             @jsonresponse = {'status' => "no"}
             render :json => @jsonresponse
