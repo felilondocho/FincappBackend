@@ -55,9 +55,13 @@ class UsersController < ApplicationController
         @cellphone = @pay["cellphone"]
         @password = @pay["password"]
 
-        @userexist = User.where("username = ? AND password = ?",@username,@password)
+        @userexist = User.where("username = ?",@username)
+        @userccexist = User.where("cedula = ?",@cc)
         @userfound = false
         @userexist.each do |result|
+            @userfound = true
+        end
+        @userccexist.each do |result|
             @userfound = true
         end
         if(@userfound)
