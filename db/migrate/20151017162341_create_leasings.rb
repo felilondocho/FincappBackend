@@ -1,6 +1,6 @@
-class CreateAlquilers < ActiveRecord::Migration
+class CreateLeasings < ActiveRecord::Migration
   def change
-    create_table :alquilers do |t|
+    create_table :leasings do |t|
     	t.integer :finca_id
     	t.string :datetime
     	t.string :estado

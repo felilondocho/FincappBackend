@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post 'getAttLoc' => 'fincas#getAttLoc'
       post 'getAttPrec' => 'fincas#getAttPrec'
       get 'filter/:clima/:localizacion/:precio/:personas' => 'fincas#filter'
+      post 'compare' => 'fincas#compare'
     end
   end
 
@@ -27,7 +28,7 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       post 'newUser' => 'users#newUser'
-      post 'login' => 'user#login'
+      post 'login' => 'users#login'
     end
   end
 

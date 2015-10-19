@@ -280,6 +280,30 @@ class FincasController < ApplicationController
         render :json => @exposejson
     end
 
+    def compare
+        @arrayimg = []
+        @exposejson = []
+        @pay = JSON.parse(request.body.read)
+        @idfincas = @pay["ids"]
+        @idfincas.each do |id|
+            @finca = Finca.find(id)
+            @arrayimg =[]
+            @finca.images.each do |w|
+                @arrayimg.push(w.url)
+            end
+            @ratingfinca = sacarrating(@finca.id)
+            @jsonfincas = {'id' => @finca.id,'nombre_finca' => @finca.nombre_finca,
+                'localizacion' => @finca.localizacion,'clima' => @finca.clima,
+                'capacidad' => @finca.capacidad,'informacion' => @finca.informacion,
+                'lat' => @finca.lat,'lon' => @finca.lon,'rating' => @ratingfinca,
+                'precio' => @finca.precio,'idowner' => @finca.idowner,
+                'owner' => @finca.owner,'imagen' => @arrayimg}
+
+                @exposejson.push(@jsonfincas)
+            end
+        render :json => @exposejson
+    end
+
     def destroy
     end
 

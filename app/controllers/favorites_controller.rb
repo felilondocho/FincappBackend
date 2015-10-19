@@ -8,7 +8,6 @@ class FavoritesController < ApplicationController
             @jsonfincas = {'userId' => x.user_id,'fincaId' => x.finca_id}
             @exposejson.push(@jsonfincas)
         end
-
         render :json => @exposejson
     end
 

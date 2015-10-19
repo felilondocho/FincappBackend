@@ -25,6 +25,24 @@ class UsersController < ApplicationController
 	def update
 	end
 
+    def login
+        @pay = JSON.parse(request.body.read)
+        @username = @pay["username"]
+        @password = @pay["password"]
+        @user = User.where("username = ? AND password = ?",@username,@password)
+        @userfound = false
+        @user.each do |result|
+            @userfound = true
+        end
+        if(@userfound)
+            @jsonresponse = {'status' => "done"}
+        else
+            @jsonresponse = {'status' => "no"}
+        end
+        
+        render :json => @jsonresponse
+    end
+
     def newUser
         @pay = JSON.parse(request.body.read)
         @name = @pay["name"]

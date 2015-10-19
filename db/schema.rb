@@ -11,20 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015190354) do
+ActiveRecord::Schema.define(version: 20151017162711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "alquilers", force: :cascade do |t|
-    t.integer  "finca_id"
-    t.string   "datetime"
-    t.string   "estado"
-    t.integer  "user_id"
-    t.boolean  "calificacion"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
 
   create_table "favorites", force: :cascade do |t|
     t.integer  "user_id"
@@ -55,6 +45,23 @@ ActiveRecord::Schema.define(version: 20151015190354) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "leasings", force: :cascade do |t|
+    t.integer  "finca_id"
+    t.string   "datetime"
+    t.string   "estado"
+    t.integer  "user_id"
+    t.boolean  "calificacion"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "ownerships", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "finca_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ratings", force: :cascade do |t|
     t.integer  "finca_id"
     t.integer  "votos1"
@@ -77,7 +84,7 @@ ActiveRecord::Schema.define(version: 20151015190354) do
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
     t.text     "username"
-    t.text     "lastname"
+    t.text     "apellidos"
   end
 
 end
