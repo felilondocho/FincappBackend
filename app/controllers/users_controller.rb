@@ -62,7 +62,7 @@ class UsersController < ApplicationController
         end
         if(@userfound)
             @user = User.new(:finca_id => 0,:nombre => @name,
-                :apellidos => @lastname, :username => @name,
+                :apellidos => @lastname, :username => @username,
                 :cedula => @cc,:email => @email,:telefono => @telephone,
                 :celular => @cellphone,:password => @password)
             if @user.save()
