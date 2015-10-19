@@ -32,12 +32,13 @@ class UsersController < ApplicationController
         @user = User.where("username = ? AND password = ?",@username,@password)
         @userfound = false
         @user.each do |result|
+            @user_id = result.id
             @userfound = true
         end
         if(@userfound)
-            @jsonresponse = {'status' => "done"}
+            @jsonresponse = {'status' => @user_id}
         else
-            @jsonresponse = {'status' => "no"}
+            @jsonresponse = {'status' => 0}
         end
         
         render :json => @jsonresponse
