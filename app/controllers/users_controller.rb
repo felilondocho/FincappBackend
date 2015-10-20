@@ -57,28 +57,71 @@ class UsersController < ApplicationController
 
         @userexist = User.where("username = ?",@username)
         @userccexist = User.where("cedula = ?",@cc)
+        @useremailexist = User.where("email = ?",@email)
         @userfound = false
+        @userccfound = false
+        @useremailfound = false
+
         @userexist.each do |result|
             @userfound = true
         end
         @userccexist.each do |result|
-            @userfound = true
+            @userccfound = true
         end
-        if(@userfound)
+        @useremailexist.each do |result|
+            @useremailfound = true
+        end
+        # 0 for done, 1 for username exists, 2 for cc exists,3 for email exists,4 error in db
+
+        if(@userfound == true || @userccfound == true || @useremailfound == true)
+            if(@userfound)
+                @jsonresponse = {'status' => 1}
+                render :json => @jsonresponse
+            else
+                if(@userccfound)
+                    @jsonresponse = {'status' => 2}
+                    render :json => @jsonresponse
+                else
+                    if(@useremailfound)
+                        @jsonresponse = {'status' => 3}
+                        render :json => @jsonresponse  
+                    end
+                end
+            end
+        else
             @user = User.new(:finca_id => 0,:nombre => @name,
                 :apellidos => @lastname, :username => @username,
                 :cedula => @cc,:email => @email,:telefono => @telephone,
                 :celular => @cellphone,:password => @password)
             if @user.save()
-                @jsonresponse = {'status' => "done"}
+                @jsonresponse = {'status' => 0}
+                render :json => @jsonresponse              
+            else
+                @jsonresponse = {'status' => 4}
                 render :json => @jsonresponse
+            end
+        end
+=begin
+        if(!@userfound)
+            @user = User.new(:finca_id => 0,:nombre => @name,
+                :apellidos => @lastname, :username => @username,
+                :cedula => @cc,:email => @email,:telefono => @telephone,
+                :celular => @cellphone,:password => @password)
+            if @user.save()
+
             else
                 @jsonresponse = {'status' => "no"}
                 render :json => @jsonresponse
             end
         else
+            if(@userccfound)
+
+            else
+
+            end
             @jsonresponse = {'status' => "no"}
             render :json => @jsonresponse
         end
+=end
     end
 end
